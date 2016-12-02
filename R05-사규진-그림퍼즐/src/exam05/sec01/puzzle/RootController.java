@@ -10,20 +10,27 @@ import javafx.event.ActionEvent;
 import javafx.event.Event;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.MenuItem;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.image.PixelReader;
 import javafx.scene.image.WritableImage;
+import javafx.stage.Modality;
 //import javafx.scene.media.Media;
 //import javafx.scene.media.MediaPlayer;
 //import javafx.scene.media.MediaView;
+import javafx.stage.Stage;
+import javafx.stage.StageStyle;
 
 public class RootController implements Initializable{
 	@FXML private List<ImageView> ImageViewList;
-	@FXML private Button startBtn;
+	@FXML private Button startBtn,loginBtn,cancleBtn;
 	@FXML private MenuItem newstart;
 	
 	
@@ -88,19 +95,33 @@ public class RootController implements Initializable{
 			});
 		}
 		
-		//클릭된 소스 같고 다름방식
-//		if(event.getSource() == ImageViewList.get(0)){
-//			System.out.println("같음");
-//		} else {
-//			System.out.println("다름");
-//		}
-		
-		//이미지 변환
-//				Image temp_image = img0.getImage();
-//				img1.setImage(temp_image);
-
+		//로그인 버튼 이벤트 생성
+		loginBtn.setOnAction(event->handleLoginBtn(event));
 	}
 	
+	
+	//로그인버튼 핸들러
+	private void handleLoginBtn(ActionEvent event){
+		try {
+			Stage dialog = new Stage(StageStyle.UTILITY);
+			dialog.initModality(Modality.WINDOW_MODAL);
+			dialog.initOwner(loginBtn.getScene().getWindow());
+			dialog.setTitle("추가");
+			
+			Parent parent = FXMLLoader.load(getClass().getResource("login.fxml"));
+			
+			Button loginFormCancle = (Button) parent.lookup("#cancleBtn");
+			loginFormCancle.setOnAction(e->dialog.close());
+			
+			Scene scene = new Scene(parent);
+			dialog.setScene(scene);
+			dialog.show();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+	}
+
 	//이미지 자르기
 //	public WritableImage[] cutter(){
 //		Image original_image = new Image(getClass().getResource("images/main.jpg").toExternalForm(), 300, 300, false, true);
