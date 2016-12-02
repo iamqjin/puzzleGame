@@ -19,7 +19,6 @@ public class LoginController implements Initializable{
 	
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
-		System.out.println("login 이니셜라이즈드");
 		loginBtn.setOnAction(e->handLoginBtn(e));
 	}
 
@@ -27,9 +26,7 @@ public class LoginController implements Initializable{
 	public void handLoginBtn(ActionEvent event) {
 		try {
 			System.out.println("나 눌림");
-			
-//			AnchorPane root = (AnchorPane) loginBtn.getScene().getRoot();
-//			root.getChildren().remove(login);
+
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

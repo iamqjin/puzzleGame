@@ -1,11 +1,16 @@
 package exam05.sec01.puzzle;
 
+import java.io.IOException;
 import java.net.URL;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import java.util.Observable;
 import java.util.Random;
 import java.util.ResourceBundle;
+import javax.swing.text.TabableView;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.event.Event;
 import javafx.event.EventHandler;
@@ -17,6 +22,10 @@ import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.MenuItem;
+import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableView;
+import javafx.scene.control.TextField;
+import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.image.PixelReader;
@@ -33,7 +42,6 @@ public class RootController implements Initializable{
 	@FXML private Button startBtn,loginBtn,cancleBtn;
 	@FXML private MenuItem newstart;
 	
-	
 	//이미지 불러오고 자르기
 	Image original_image = new Image(getClass().getResource("images/main.jpg").toExternalForm(), 600, 600, false, true);
 	PixelReader before_crop = original_image.getPixelReader();
@@ -49,13 +57,13 @@ public class RootController implements Initializable{
 	
 	WritableImage[] cropped_arr = {cropped,cropped1,cropped2,cropped3,cropped4,cropped5,cropped6,cropped7,cropped8}; 
 	
-	
-	
+	//선택된 그림 주변 4개 저장 배열
 	private int[] nb = new int[4];
 	
 	//랜덤 발생기
 	Random random = new Random();
 	
+	//초기화부분(이벤트생성 등)
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
 		
@@ -71,8 +79,8 @@ public class RootController implements Initializable{
 		
 		//이미지 삽입
 		startBtn.setOnAction(event -> handleStartBtn(event));
-		
 		newstart.setOnAction(event -> handleStartBtn(event));
+		
 		
 		//이미지뷰 클릭 이벤트
 		for(ImageView image : ImageViewList){
@@ -97,6 +105,8 @@ public class RootController implements Initializable{
 		
 		//로그인 버튼 이벤트 생성
 		loginBtn.setOnAction(event->handleLoginBtn(event));
+		
+		
 	}
 	
 	
@@ -110,8 +120,52 @@ public class RootController implements Initializable{
 			
 			Parent parent = FXMLLoader.load(getClass().getResource("login.fxml"));
 			
+			//로그인창에서 취소버튼시 되돌아옴
 			Button loginFormCancle = (Button) parent.lookup("#cancleBtn");
 			loginFormCancle.setOnAction(e->dialog.close());
+			
+			//로그인창에서 회원가입 버튼 입력시 작동
+			Button joinBtn_login = (Button) parent.lookup("#signUpBtn");
+			joinBtn_login.setOnAction(e -> {
+				
+				Stage dialog_join = new Stage(StageStyle.UTILITY);
+				dialog_join.initModality(Modality.WINDOW_MODAL);
+				dialog_join.initOwner(loginBtn.getScene().getWindow());
+				dialog_join.setTitle("회원가입");
+				
+				try {
+					Parent parent_join = FXMLLoader.load(getClass().getResource("join.fxml"));
+					Button joinFormCancle = (Button) parent_join.lookup("#cancleBtn");
+					Button joinBtn_join = (Button) parent_join.lookup("#joinBtn");
+					
+					//회원가입창 가입버튼이벤트 + 취소버튼 이벤트
+					joinBtn_join.setOnAction(new EventHandler<ActionEvent>() {
+
+						@Override
+						public void handle(ActionEvent event) {
+							System.out.println("난 가입버튼");
+							dialog_join.close();
+						}
+						
+					});
+					joinFormCancle.setOnAction(new EventHandler<ActionEvent>() {
+
+						@Override
+						public void handle(ActionEvent event) {
+							System.out.println("난 취소버튼");
+							dialog_join.close();
+						}
+					});
+					
+					//회원가입창 scene 생성 후 띄움
+					Scene scene = new Scene(parent_join);
+					dialog_join.setScene(scene);
+					dialog_join.show();
+				} catch (IOException e1) {
+					e1.printStackTrace();
+				}
+				
+			});
 			
 			Scene scene = new Scene(parent);
 			dialog.setScene(scene);
@@ -250,6 +304,7 @@ public class RootController implements Initializable{
 		
 	}
 
+	
 	//재생 이벤트 핸들러
 //	public void play(ActionEvent event){
 //		Media media = new Media(getClass().getResource("media/media.mp4").toString());

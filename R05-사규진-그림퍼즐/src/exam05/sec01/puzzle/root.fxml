@@ -54,7 +54,7 @@
       <Button fx:id="cancleBtn" layoutX="43.0" layoutY="306.0" mnemonicParsing="false" text="취소" />
    </children>
 	
-	<fx:define>
+ 	<fx:define>
    		<ArrayList fx:id="ImageViewList">
    			<fx:reference source= "img0"/>
    			<fx:reference source= "img1"/>
@@ -66,6 +66,6 @@
    			<fx:reference source= "img7"/>
    			<fx:reference source= "img8"/>
    		</ArrayList>
-   </fx:define>   
+   </fx:define>  
 	  
 </AnchorPane>
