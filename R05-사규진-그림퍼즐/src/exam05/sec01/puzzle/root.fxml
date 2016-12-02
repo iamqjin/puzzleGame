@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.scene.web.*?>
 <?import javafx.scene.effect.*?>
 <?import javafx.scene.media.*?>
 <?import javafx.scene.image.*?>
@@ -9,7 +10,7 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import java.util.ArrayList?>
 
-<AnchorPane prefHeight="800.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="exam05.sec01.puzzle.RootController">
+<AnchorPane fx:id="root" prefHeight="800.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="exam05.sec01.puzzle.RootController">
    <children>
       <GridPane gridLinesVisible="true" layoutX="150.0" layoutY="150.0" prefHeight="600.0" prefWidth="600.0">
         <columnConstraints>
@@ -35,7 +36,7 @@
          </children>
       </GridPane>
       <Button fx:id="startBtn" layoutX="43.0" layoutY="187.0" mnemonicParsing="false" text="시작" />
-      <MenuBar layoutY="-2.0" prefHeight="32.0" prefWidth="800.0">
+      <MenuBar layoutY="7.0" prefHeight="32.0" prefWidth="800.0">
         <menus>
           <Menu mnemonicParsing="false" text="파일">
             <items>
@@ -49,6 +50,8 @@
           </Menu>
         </menus>
       </MenuBar>
+      <Button fx:id="loginBtn" layoutX="36.0" layoutY="257.0" mnemonicParsing="false" text="로그인" />
+      <Button fx:id="cancleBtn" layoutX="43.0" layoutY="306.0" mnemonicParsing="false" text="취소" />
    </children>
 	
 	<fx:define>
@@ -64,4 +67,5 @@
    			<fx:reference source= "img8"/>
    		</ArrayList>
    </fx:define>   
+	  
 </AnchorPane>
