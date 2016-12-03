@@ -7,7 +7,6 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Random;
 import java.util.ResourceBundle;
-
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
@@ -22,7 +21,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.ProgressBar;
-import javafx.scene.control.ProgressIndicator;
+import javafx.scene.control.Slider;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.image.PixelReader;
@@ -43,6 +42,7 @@ public class RootController implements Initializable{
 	@FXML private MediaView mediaView;
 	@FXML private ProgressBar progressBar;
 	@FXML private Label labelTime;
+	@FXML private Slider sliderVolume;
 	
 	//이미지 불러오고 자르기
 	Image original_image = new Image(getClass().getResource("images/main.jpg").toExternalForm(), 600, 600, false, true);
@@ -138,6 +138,17 @@ public class RootController implements Initializable{
 		startBtn.setOnAction(event -> handleStartBtn(event));
 		newstart.setOnAction(event -> handleStartBtn(event));
 		
+		//음악 볼륨 액션
+		sliderVolume.valueProperty().addListener(new ChangeListener<Number>() {
+
+			@Override
+			public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
+				mediaPlayer.setVolume(sliderVolume.getValue() / 100.0);
+			}
+		});
+		
+		//볼륨 위치 중간으로 셋팅
+		sliderVolume.setValue(50.0);
 		
 		//이미지뷰 클릭 이벤트
 		for(ImageView image : ImageViewList){

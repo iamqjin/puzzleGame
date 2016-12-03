@@ -58,9 +58,10 @@
       <MediaView fx:id="mediaView" fitHeight="100.0" fitWidth="100.0" layoutX="376.0" layoutY="32.0" />
       <ProgressBar fx:id="progressBar" layoutX="476.0" layoutY="45.0" prefWidth="200.0" progress="0.0" />
       <Label fx:id="labelTime" layoutX="686.0" layoutY="47.0" text="Label" />
+      <Slider fx:id="sliderVolume" layoutX="506.0" layoutY="109.0" />
    </children>
 	
-  <fx:define>
+     <fx:define>
    		<ArrayList fx:id="ImageViewList">
    			<fx:reference source= "img0"/>
    			<fx:reference source= "img1"/>
@@ -72,6 +73,6 @@
    			<fx:reference source= "img7"/>
    			<fx:reference source= "img8"/>
    		</ArrayList>
-   </fx:define>    
+   </fx:define> 
 	  
 </AnchorPane>
