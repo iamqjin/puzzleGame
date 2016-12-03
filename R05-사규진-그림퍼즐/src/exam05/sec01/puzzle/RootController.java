@@ -15,6 +15,7 @@ import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.print.PaperSource;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
@@ -45,7 +46,7 @@ public class RootController implements Initializable{
 	@FXML private Slider sliderVolume;
 	
 	//이미지 불러오고 자르기
-	Image original_image = new Image(getClass().getResource("images/main.jpg").toExternalForm(), 600, 600, false, true);
+	Image original_image = new Image(getClass().getResource("images/main.png").toExternalForm(), 600, 600, false, true);
 	PixelReader before_crop = original_image.getPixelReader();
 	WritableImage cropped0 = new WritableImage(before_crop, 0, 0, 200,200);
 	WritableImage cropped1 = new WritableImage(before_crop, 200, 0, 200,200);
@@ -71,6 +72,15 @@ public class RootController implements Initializable{
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
 		
+		//플레이어 버튼 이미지 초기화
+		Image play = new Image(getClass().getResourceAsStream("images/play-button.png"), 15 , 15 , false , true);
+		btnPlay.setGraphic(new ImageView(play));
+		Image pause = new Image(getClass().getResourceAsStream("images/pause-button.png"), 15 , 15 , false, true);
+		btnPause.setGraphic(new ImageView(pause));
+		Image stop = new Image(getClass().getResourceAsStream("images/stop-button.png"), 15 , 15 , false , false);
+		btnStop.setGraphic(new ImageView(stop));
+		
+		
 		//이미지 정답 만들기
 		makeCorrect();
 		Image[] correct = new Image[8];
@@ -93,11 +103,10 @@ public class RootController implements Initializable{
 				mediaPlayer.currentTimeProperty().addListener(new ChangeListener<Duration>() {
 					@Override
 					public void changed(ObservableValue<? extends Duration> observable, Duration oldValue, Duration newValue){
-						double progress = mediaPlayer.getCurrentTime().toSeconds();
-						mediaPlayer.getTotalDuration().toSeconds();
+						double progress = mediaPlayer.getCurrentTime().toSeconds() / mediaPlayer.getTotalDuration().toSeconds();
 						progressBar.setProgress(progress);
 						
-						labelTime.setText((int)mediaPlayer.getCurrentTime().toSeconds()+"/"+(int)mediaPlayer.getTotalDuration().toSeconds()+"sec");
+						labelTime.setText((int)mediaPlayer.getCurrentTime().toSeconds() +"/"+ (int)mediaPlayer.getTotalDuration().toSeconds()+"sec");
 					}
 				});
 				btnPlay.setDisable(false); btnPause.setDisable(true); btnStop.setDisable(true);
