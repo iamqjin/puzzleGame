@@ -2,6 +2,7 @@ package exam05.sec01.puzzle;
 
 import java.io.IOException;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
@@ -62,6 +63,11 @@ public class RootController implements Initializable{
 	//선택된 그림 주변 4개 저장 배열
 	private int[] nb = new int[4];
 	
+	//정답지
+	private Image[] correct = new Image[8];
+	//배치할 이미지
+	private Image[] setImage = new Image[8]; 
+	
 	//랜덤 발생기
 	Random random = new Random();
 	
@@ -80,13 +86,32 @@ public class RootController implements Initializable{
 		btnStop.setGraphic(new ImageView(stop));
 		
 		//이미지 정답 만들기
-		cutImage();
-		Image[] correct = new Image[8];
+		
+		Image[] local_correct = new Image[8];
+		
 		
 		//정답 비교하기
 		for(int i = 0; i < cutImage().length; i++)
 		{
-			correct[i] = cutImage()[i];
+			setImage[i] = cutImage()[i];
+			local_correct[i] = setImage[i];
+			System.out.println("난 이니셜라이즈 correct " + setImage[i]);
+		}
+		
+		//이미지뷰 클릭 이벤트
+		for(ImageView image : ImageViewList){
+			image.setOnMouseClicked(new EventHandler<Event>() {
+
+				@Override
+				public void handle(Event event) {
+					//이미지뷰의 id 값을 얻은 뒤 숫자만 잘라서 int형으로 변환
+					ImageView iv = (ImageView) event.getSource();
+					String before_id = iv.getId();
+					int id = Integer.parseInt(before_id.substring(3));
+					findNeighber(id);
+					correct(local_correct);
+				}
+			});
 		}
 		
 		//음악재생 객체 생성
@@ -150,8 +175,20 @@ public class RootController implements Initializable{
 					System.out.println("시작버튼 눌림");
 					
 					//잘린 이미지 섞기
-					List<Image> list = Arrays.asList(cutImage());
+					List<Image> list = Arrays.asList(setImage);
 					Collections.shuffle(list);
+					for(Image h : list){
+						System.out.println("shuffle " + h);
+					}
+					
+					//배열로만 섞기
+//					int ran_num;
+//					for(int i = 0; i < correct.length; i++){
+//						ran_num = (int)(Math.random()*8);
+//						setImage = correct[i];
+//						correct[i] = correct[ran_num];
+//						correct[ran_num] = setImage;
+//					}
 					
 					//배열로 다시 변환
 					Image[] s_cropped_arr = list.toArray(new Image[list.size()]);
@@ -159,7 +196,7 @@ public class RootController implements Initializable{
 					//자른 이미지를 FXML 이미지뷰id리스트에 대입 => 섞인 이미지 배치
 					for(int i = 0; i < s_cropped_arr.length; i++){
 						
-						System.out.println(s_cropped_arr[i]);
+							System.out.println(s_cropped_arr[i]);
 							ImageViewList.get(i).setImage(s_cropped_arr[i]);
 							ImageViewList.get(i).setDisable(false); //이미지 클릭 가능
 						}
@@ -181,21 +218,7 @@ public class RootController implements Initializable{
 		//볼륨 위치 중간으로 셋팅
 		sliderVolume.setValue(50.0);
 		
-		//이미지뷰 클릭 이벤트
-		for(ImageView image : ImageViewList){
-			image.setOnMouseClicked(new EventHandler<Event>() {
-
-				@Override
-				public void handle(Event event) {
-					//이미지뷰의 id 값을 얻은 뒤 숫자만 잘라서 int형으로 변환
-					ImageView iv = (ImageView) event.getSource();
-					String before_id = iv.getId();
-					int id = Integer.parseInt(before_id.substring(3));
-					findNeighber(id);
-					correct(correct);
-				}
-			});
-		}
+		
 		
 		//로그인 버튼 이벤트 생성
 		loginBtn.setOnAction(event->handleLoginBtn(event));
@@ -203,7 +226,7 @@ public class RootController implements Initializable{
 	
 	//이미지 불러오고 자르기
 	public Image[] cutImage(){
-		Image[] cropped_image = new Image[8];
+//		Image[] cropped_image = new Image[8];
 		Image original_image = new Image(getClass().getResource("images/main.png").toExternalForm(), 600, 600, false, true);
 		PixelReader before_crop = original_image.getPixelReader();
 		WritableImage cropped0 = new WritableImage(before_crop, 0, 0, 200,200);
@@ -217,10 +240,10 @@ public class RootController implements Initializable{
 //			WritableImage cropped8 = new WritableImage(before_crop, 400, 400, 200,200); 한칸 비우기 때문에 안씀
 		WritableImage[] cropped_arr = {cropped0,cropped1,cropped2,cropped3,cropped4,cropped5,cropped6,cropped7}; 
 		for(int i = 0; i < cropped_arr.length; i++){
-			cropped_image[i] = (Image) cropped_arr[i];
+			correct[i] = (Image) cropped_arr[i];
 		}
 			
-		return cropped_image;
+		return correct;
 	}
 	
 	//로그인버튼 핸들러
@@ -357,11 +380,14 @@ public class RootController implements Initializable{
 	//그림 정답
 	public void correct(Image[] Image_arr){
 		System.out.println("나 correct함수");
+		
 		int count = 0;
 		for(int i = 0; i < Image_arr.length; i++){
+			
+			System.out.println("correct함수" + Image_arr[i]);
+			
 			if(Image_arr[i] == ImageViewList.get(i).getImage()){
 				count++;
-				System.out.println("정답수" + count);
 			}
 			
 			if(count == 8){
@@ -374,6 +400,8 @@ public class RootController implements Initializable{
 				break;
 			}
 		}
+		System.out.println("정답수" + count);
+		
 	}
 	
 	//정답 만들기
