@@ -5,12 +5,11 @@ import java.net.URL;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
-import java.util.Observable;
 import java.util.Random;
 import java.util.ResourceBundle;
-import javax.swing.text.TabableView;
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
+
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
 import javafx.event.Event;
 import javafx.event.EventHandler;
@@ -20,27 +19,30 @@ import javafx.fxml.Initializable;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
-import javafx.scene.control.ChoiceBox;
+import javafx.scene.control.Label;
 import javafx.scene.control.MenuItem;
-import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableView;
-import javafx.scene.control.TextField;
-import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.control.ProgressBar;
+import javafx.scene.control.ProgressIndicator;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.image.PixelReader;
 import javafx.scene.image.WritableImage;
+import javafx.scene.media.Media;
+import javafx.scene.media.MediaPlayer;
+import javafx.scene.media.MediaView;
 import javafx.stage.Modality;
-//import javafx.scene.media.Media;
-//import javafx.scene.media.MediaPlayer;
-//import javafx.scene.media.MediaView;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
+import javafx.util.Duration;
 
 public class RootController implements Initializable{
 	@FXML private List<ImageView> ImageViewList;
-	@FXML private Button startBtn,loginBtn,cancleBtn;
+	@FXML private Button startBtn,loginBtn,cancleBtn,btnPlay, btnPause, btnStop;
 	@FXML private MenuItem newstart;
+	@FXML private Label score;
+	@FXML private MediaView mediaView;
+	@FXML private ProgressBar progressBar;
+	@FXML private Label labelTime;
 	
 	//이미지 불러오고 자르기
 	Image original_image = new Image(getClass().getResource("images/main.jpg").toExternalForm(), 600, 600, false, true);
@@ -63,6 +65,8 @@ public class RootController implements Initializable{
 	//랜덤 발생기
 	Random random = new Random();
 	
+	private boolean endOfMedia; //재생완료 확인플래그
+	
 	//초기화부분(이벤트생성 등)
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
@@ -76,6 +80,59 @@ public class RootController implements Initializable{
 		{
 			correct[i] = makeCorrect()[i];
 		}
+		
+		//음악재생 객체 생성
+		Media media = new Media(getClass().getResource("media/audio.mp3").toString());
+		MediaPlayer mediaPlayer = new MediaPlayer(media);
+		mediaView.setMediaPlayer(mediaPlayer);
+		
+		mediaPlayer.setOnReady(new Runnable() {
+			
+			@Override
+			public void run() {
+				mediaPlayer.currentTimeProperty().addListener(new ChangeListener<Duration>() {
+					@Override
+					public void changed(ObservableValue<? extends Duration> observable, Duration oldValue, Duration newValue){
+						double progress = mediaPlayer.getCurrentTime().toSeconds();
+						mediaPlayer.getTotalDuration().toSeconds();
+						progressBar.setProgress(progress);
+						
+						labelTime.setText((int)mediaPlayer.getCurrentTime().toSeconds()+"/"+(int)mediaPlayer.getTotalDuration().toSeconds()+"sec");
+					}
+				});
+				btnPlay.setDisable(false); btnPause.setDisable(true); btnStop.setDisable(true);
+				if(mediaPlayer.isAutoPlay()){
+					mediaView.setVisible(false);
+				}
+			}
+		});
+		mediaPlayer.setOnPlaying(()-> {
+			btnPlay.setDisable(true); btnPause.setDisable(false); btnStop.setDisable(false);
+		});
+		mediaPlayer.setOnPaused(()->{
+			btnPlay.setDisable(false); btnPause.setDisable(true); btnStop.setDisable(false);
+		});
+		mediaPlayer.setOnEndOfMedia(()->{
+			progressBar.setProgress(1.0);
+			endOfMedia = true;
+			btnPlay.setDisable(false); btnPause.setDisable(true); btnStop.setDisable(true);
+		});
+		mediaPlayer.setOnStopped(()->{
+			btnPlay.setDisable(false); btnPause.setDisable(true); btnStop.setDisable(true);
+		});
+		
+		//재생 액션 처리
+		btnPlay.setOnAction(event -> {
+			if(endOfMedia){
+				mediaPlayer.stop();
+				mediaPlayer.seek(mediaPlayer.getStartTime());
+			}
+			mediaPlayer.play();
+			endOfMedia = false;
+		});
+		btnPause.setOnAction(event -> mediaPlayer.pause());
+		btnStop.setOnAction(event-> mediaPlayer.stop());
+		
 		
 		//이미지 삽입
 		startBtn.setOnAction(event -> handleStartBtn(event));
@@ -272,16 +329,16 @@ public class RootController implements Initializable{
 	}
 
 	
-	//재생 이벤트 핸들러
+//	//재생 이벤트 핸들러
 //	public void play(ActionEvent event){
 //		Media media = new Media(getClass().getResource("media/media.mp4").toString());
 //		MediaPlayer mediaPlayer = new MediaPlayer(media);
 //		player.setMediaPlayer(mediaPlayer);
 //		mediaPlayer.setAutoPlay(true);
 //	}
-	
-	
-	//재생 메소드
+//	
+//	
+//	//재생 메소드
 //	public void play2(){
 //		Media media = new Media(getClass().getResource("media/media.mp4").toString());
 //		MediaPlayer mediaPlayer = new MediaPlayer(media);

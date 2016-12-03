@@ -35,8 +35,8 @@
             <ImageView fx:id="img1" fitHeight="200.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="1" />
          </children>
       </GridPane>
-      <Button fx:id="startBtn" layoutX="43.0" layoutY="187.0" mnemonicParsing="false" text="시작" />
-      <MenuBar layoutY="7.0" prefHeight="32.0" prefWidth="800.0">
+      <Button fx:id="startBtn" layoutX="28.0" layoutY="168.0" mnemonicParsing="false" prefHeight="50.0" prefWidth="70.0" text="시작" />
+      <MenuBar prefHeight="32.0" prefWidth="800.0">
         <menus>
           <Menu mnemonicParsing="false" text="파일">
             <items>
@@ -50,11 +50,17 @@
           </Menu>
         </menus>
       </MenuBar>
-      <Button fx:id="loginBtn" layoutX="36.0" layoutY="257.0" mnemonicParsing="false" text="로그인" />
-      <Button fx:id="cancleBtn" layoutX="43.0" layoutY="306.0" mnemonicParsing="false" text="취소" />
+      <Button fx:id="loginBtn" layoutX="37.0" layoutY="334.0" mnemonicParsing="false" text="로그인" />
+      <Button fx:id="cancleBtn" layoutX="31.0" layoutY="718.0" mnemonicParsing="false" text="게임종료" />
+      <Button fx:id="btnPlay" layoutX="488.0" layoutY="70.0" mnemonicParsing="false" text="재생" />
+      <Button fx:id="btnPause" layoutX="624.0" layoutY="70.0" mnemonicParsing="false" text="멈춤" />
+      <Button fx:id="btnStop" layoutX="556.0" layoutY="70.0" mnemonicParsing="false" text="정지" />
+      <MediaView fx:id="mediaView" fitHeight="100.0" fitWidth="100.0" layoutX="376.0" layoutY="32.0" />
+      <ProgressBar fx:id="progressBar" layoutX="476.0" layoutY="45.0" prefWidth="200.0" progress="0.0" />
+      <Label fx:id="labelTime" layoutX="686.0" layoutY="47.0" text="Label" />
    </children>
 	
- 	<fx:define>
+  <fx:define>
    		<ArrayList fx:id="ImageViewList">
    			<fx:reference source= "img0"/>
    			<fx:reference source= "img1"/>
@@ -66,6 +72,6 @@
    			<fx:reference source= "img7"/>
    			<fx:reference source= "img8"/>
    		</ArrayList>
-   </fx:define>  
+   </fx:define>    
 	  
 </AnchorPane>
