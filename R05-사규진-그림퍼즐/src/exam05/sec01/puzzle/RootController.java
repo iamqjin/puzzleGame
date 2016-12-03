@@ -45,7 +45,7 @@ public class RootController implements Initializable{
 	//이미지 불러오고 자르기
 	Image original_image = new Image(getClass().getResource("images/main.jpg").toExternalForm(), 600, 600, false, true);
 	PixelReader before_crop = original_image.getPixelReader();
-	WritableImage cropped = new WritableImage(before_crop, 0, 0, 200,200);
+	WritableImage cropped0 = new WritableImage(before_crop, 0, 0, 200,200);
 	WritableImage cropped1 = new WritableImage(before_crop, 200, 0, 200,200);
 	WritableImage cropped2 = new WritableImage(before_crop, 400, 0, 200,200);
 	WritableImage cropped3 = new WritableImage(before_crop, 0, 200, 200,200);
@@ -55,7 +55,7 @@ public class RootController implements Initializable{
 	WritableImage cropped7 = new WritableImage(before_crop, 200, 400, 200,200);
 	WritableImage cropped8 = new WritableImage(before_crop, 400, 400, 200,200);
 	
-	WritableImage[] cropped_arr = {cropped,cropped1,cropped2,cropped3,cropped4,cropped5,cropped6,cropped7,cropped8}; 
+	WritableImage[] cropped_arr = {cropped0,cropped1,cropped2,cropped3,cropped4,cropped5,cropped6,cropped7}; 
 	
 	//선택된 그림 주변 4개 저장 배열
 	private int[] nb = new int[4];
@@ -69,7 +69,7 @@ public class RootController implements Initializable{
 		
 		//이미지 정답 만들기
 		makeCorrect();
-		Image[] correct = new Image[9];
+		Image[] correct = new Image[8];
 		
 		//정답 비교하기
 		for(int i = 0; i < makeCorrect().length; i++)
@@ -93,20 +93,14 @@ public class RootController implements Initializable{
 					String before_id = iv.getId();
 					int id = Integer.parseInt(before_id.substring(3));
 					System.out.println(id);
-//					System.out.println(event.getSource());
-					
 					findNeighber(id);
 					correct(correct);
-					
 				}
-				
 			});
 		}
 		
 		//로그인 버튼 이벤트 생성
 		loginBtn.setOnAction(event->handleLoginBtn(event));
-		
-		
 	}
 	
 	
@@ -176,24 +170,6 @@ public class RootController implements Initializable{
 		
 	}
 
-	//이미지 자르기
-//	public WritableImage[] cutter(){
-//		Image original_image = new Image(getClass().getResource("images/main.jpg").toExternalForm(), 300, 300, false, true);
-//		PixelReader before_crop = original_image.getPixelReader();
-//		WritableImage cropped = new WritableImage(before_crop, 0, 0, 100,100);
-//		WritableImage cropped1 = new WritableImage(before_crop, 100, 0, 100,100);
-//		WritableImage cropped2 = new WritableImage(before_crop, 200, 0, 100,100);
-//		WritableImage cropped3 = new WritableImage(before_crop, 0, 100, 100,100);
-//		WritableImage cropped4 = new WritableImage(before_crop, 100, 100, 100,100);
-//		WritableImage cropped5 = new WritableImage(before_crop, 200, 100, 100,100);
-//		WritableImage cropped6 = new WritableImage(before_crop, 0, 200, 100,100);
-//		WritableImage cropped7 = new WritableImage(before_crop, 100, 200, 100,100);
-//		WritableImage cropped8 = new WritableImage(before_crop, 200, 200, 100,100);
-//		
-//		WritableImage[] cropped_arr = {cropped,cropped1,cropped2,cropped3,cropped4,cropped5,cropped6,cropped7,cropped8}; 
-//		
-//		return cropped_arr;
-//	}
 	
 	//게임 시작
 	public void handleStartBtn(ActionEvent event) {
@@ -206,26 +182,16 @@ public class RootController implements Initializable{
 		//배열로 다시 변환
 		WritableImage[] s_cropped_arr = list.toArray(new WritableImage[list.size()]);
 
-		
-		
-//		s_cropped_arr[img_ran_num] = null;
-		
 		//자른 이미지를 FXML 이미지뷰id리스트에 대입 => 섞인 이미지 배치
 		for(int i = 0; i < s_cropped_arr.length; i++){
 			
 			System.out.println(s_cropped_arr[i]);
-//			if(s_cropped_arr[i] == null){
-//				System.out.println("난 8번");
-//				ImageViewList.get(8).setImage(s_cropped_arr[i]);
-//			} else {
-//				System.out.println("난 i번");
 				ImageViewList.get(i).setImage(s_cropped_arr[i]);
 				ImageViewList.get(i).setDisable(false); //이미지 클릭 가능
 			}
-		//특정한 칸만 작동 및 이미지 삭제
-		int img_ran_num = random.nextInt(9);
-//		ImageViewList.get(img_ran_num).setDisable(true); //이미지 클릭 불가
-		ImageViewList.get(img_ran_num).setImage(null);
+		
+		//배열(3,3) 칸만 이미지 삭제
+		ImageViewList.get(8).setImage(null);
 		}
 		
 	
@@ -253,6 +219,7 @@ public class RootController implements Initializable{
 			nb[3] = -1;
 		}
 		
+		//이미지 변경
 		for(int i = 0; i < 4; i++){
 			if (nb[i] >= 0 && ImageViewList.get(nb[i]).getImage() == null) {
 				Image act;
@@ -294,7 +261,7 @@ public class RootController implements Initializable{
 	public Image[] makeCorrect(){
 		
 		//이미지 배열에 자른 이미지를 차례로 입력 후 리턴하는 함수
-		Image[] correct_image = new Image[9];
+		Image[] correct_image = new Image[8];
 		
 		for(int i = 0; i < correct_image.length; i++){
 			correct_image[i] = (Image) cropped_arr[i];
