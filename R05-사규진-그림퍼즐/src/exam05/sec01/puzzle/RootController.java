@@ -46,20 +46,19 @@ public class RootController implements Initializable{
 	@FXML private Slider sliderVolume;
 	
 	//이미지 불러오고 자르기
-	Image original_image = new Image(getClass().getResource("images/main.png").toExternalForm(), 600, 600, false, true);
-	PixelReader before_crop = original_image.getPixelReader();
-	WritableImage cropped0 = new WritableImage(before_crop, 0, 0, 200,200);
-	WritableImage cropped1 = new WritableImage(before_crop, 200, 0, 200,200);
-	WritableImage cropped2 = new WritableImage(before_crop, 400, 0, 200,200);
-	WritableImage cropped3 = new WritableImage(before_crop, 0, 200, 200,200);
-	WritableImage cropped4 = new WritableImage(before_crop, 200, 200, 200,200);
-	WritableImage cropped5 = new WritableImage(before_crop, 400, 200, 200,200);
-	WritableImage cropped6 = new WritableImage(before_crop, 0, 400, 200,200);
-	WritableImage cropped7 = new WritableImage(before_crop, 200, 400, 200,200);
-	WritableImage cropped8 = new WritableImage(before_crop, 400, 400, 200,200);
-	
-	WritableImage[] cropped_arr = {cropped0,cropped1,cropped2,cropped3,cropped4,cropped5,cropped6,cropped7}; 
-	
+//	Image original_image = new Image(getClass().getResource("images/main.png").toExternalForm(), 600, 600, false, true);
+//	PixelReader before_crop = original_image.getPixelReader();
+//	WritableImage cropped0 = new WritableImage(before_crop, 0, 0, 200,200);
+//	WritableImage cropped1 = new WritableImage(before_crop, 200, 0, 200,200);
+//	WritableImage cropped2 = new WritableImage(before_crop, 400, 0, 200,200);
+//	WritableImage cropped3 = new WritableImage(before_crop, 0, 200, 200,200);
+//	WritableImage cropped4 = new WritableImage(before_crop, 200, 200, 200,200);
+//	WritableImage cropped5 = new WritableImage(before_crop, 400, 200, 200,200);
+//	WritableImage cropped6 = new WritableImage(before_crop, 0, 400, 200,200);
+//	WritableImage cropped7 = new WritableImage(before_crop, 200, 400, 200,200);
+//	WritableImage cropped8 = new WritableImage(before_crop, 400, 400, 200,200);
+//	WritableImage[] cropped_arr = {cropped0,cropped1,cropped2,cropped3,cropped4,cropped5,cropped6,cropped7}; 
+//	
 	//선택된 그림 주변 4개 저장 배열
 	private int[] nb = new int[4];
 	
@@ -80,15 +79,14 @@ public class RootController implements Initializable{
 		Image stop = new Image(getClass().getResourceAsStream("images/stop-button.png"), 15 , 15 , false , false);
 		btnStop.setGraphic(new ImageView(stop));
 		
-		
 		//이미지 정답 만들기
-		makeCorrect();
+		cutImage();
 		Image[] correct = new Image[8];
 		
 		//정답 비교하기
-		for(int i = 0; i < makeCorrect().length; i++)
+		for(int i = 0; i < cutImage().length; i++)
 		{
-			correct[i] = makeCorrect()[i];
+			correct[i] = cutImage()[i];
 		}
 		
 		//음악재생 객체 생성
@@ -144,8 +142,32 @@ public class RootController implements Initializable{
 		
 		
 		//이미지 삽입
-		startBtn.setOnAction(event -> handleStartBtn(event));
-		newstart.setOnAction(event -> handleStartBtn(event));
+//		startBtn.setOnAction(event -> handleStartBtn(event));
+		newstart.setOnAction(new EventHandler<ActionEvent>() {
+
+			@Override
+			public void handle(ActionEvent event) {
+					System.out.println("시작버튼 눌림");
+					
+					//잘린 이미지 섞기
+					List<Image> list = Arrays.asList(cutImage());
+					Collections.shuffle(list);
+					
+					//배열로 다시 변환
+					Image[] s_cropped_arr = list.toArray(new Image[list.size()]);
+
+					//자른 이미지를 FXML 이미지뷰id리스트에 대입 => 섞인 이미지 배치
+					for(int i = 0; i < s_cropped_arr.length; i++){
+						
+						System.out.println(s_cropped_arr[i]);
+							ImageViewList.get(i).setImage(s_cropped_arr[i]);
+							ImageViewList.get(i).setDisable(false); //이미지 클릭 가능
+						}
+					
+					//배열(3,3) 칸만 이미지 삭제
+					ImageViewList.get(8).setImage(null);
+				}
+		});
 		
 		//음악 볼륨 액션
 		sliderVolume.valueProperty().addListener(new ChangeListener<Number>() {
@@ -169,7 +191,6 @@ public class RootController implements Initializable{
 					ImageView iv = (ImageView) event.getSource();
 					String before_id = iv.getId();
 					int id = Integer.parseInt(before_id.substring(3));
-					System.out.println(id);
 					findNeighber(id);
 					correct(correct);
 				}
@@ -180,6 +201,27 @@ public class RootController implements Initializable{
 		loginBtn.setOnAction(event->handleLoginBtn(event));
 	}
 	
+	//이미지 불러오고 자르기
+	public Image[] cutImage(){
+		Image[] cropped_image = new Image[8];
+		Image original_image = new Image(getClass().getResource("images/main.png").toExternalForm(), 600, 600, false, true);
+		PixelReader before_crop = original_image.getPixelReader();
+		WritableImage cropped0 = new WritableImage(before_crop, 0, 0, 200,200);
+		WritableImage cropped1 = new WritableImage(before_crop, 200, 0, 200,200);
+		WritableImage cropped2 = new WritableImage(before_crop, 400, 0, 200,200);
+		WritableImage cropped3 = new WritableImage(before_crop, 0, 200, 200,200);
+		WritableImage cropped4 = new WritableImage(before_crop, 200, 200, 200,200);
+		WritableImage cropped5 = new WritableImage(before_crop, 400, 200, 200,200);
+		WritableImage cropped6 = new WritableImage(before_crop, 0, 400, 200,200);
+		WritableImage cropped7 = new WritableImage(before_crop, 200, 400, 200,200);
+//			WritableImage cropped8 = new WritableImage(before_crop, 400, 400, 200,200); 한칸 비우기 때문에 안씀
+		WritableImage[] cropped_arr = {cropped0,cropped1,cropped2,cropped3,cropped4,cropped5,cropped6,cropped7}; 
+		for(int i = 0; i < cropped_arr.length; i++){
+			cropped_image[i] = (Image) cropped_arr[i];
+		}
+			
+		return cropped_image;
+	}
 	
 	//로그인버튼 핸들러
 	private void handleLoginBtn(ActionEvent event){
@@ -249,27 +291,27 @@ public class RootController implements Initializable{
 
 	
 	//게임 시작
-	public void handleStartBtn(ActionEvent event) {
-		System.out.println("시작버튼 눌림");
-		
-		//잘린 이미지 섞기
-		List<WritableImage> list = Arrays.asList(cropped_arr);
-		Collections.shuffle(list);
-		
-		//배열로 다시 변환
-		WritableImage[] s_cropped_arr = list.toArray(new WritableImage[list.size()]);
-
-		//자른 이미지를 FXML 이미지뷰id리스트에 대입 => 섞인 이미지 배치
-		for(int i = 0; i < s_cropped_arr.length; i++){
-			
-			System.out.println(s_cropped_arr[i]);
-				ImageViewList.get(i).setImage(s_cropped_arr[i]);
-				ImageViewList.get(i).setDisable(false); //이미지 클릭 가능
-			}
-		
-		//배열(3,3) 칸만 이미지 삭제
-		ImageViewList.get(8).setImage(null);
-		}
+//	public void handleStartBtn(ActionEvent event) {
+//		System.out.println("시작버튼 눌림");
+//		
+//		//잘린 이미지 섞기
+//		List<WritableImage> list = Arrays.asList(cropped_arr);
+//		Collections.shuffle(list);
+//		
+//		//배열로 다시 변환
+//		WritableImage[] s_cropped_arr = list.toArray(new WritableImage[list.size()]);
+//
+//		//자른 이미지를 FXML 이미지뷰id리스트에 대입 => 섞인 이미지 배치
+//		for(int i = 0; i < s_cropped_arr.length; i++){
+//			
+//			System.out.println(s_cropped_arr[i]);
+//				ImageViewList.get(i).setImage(s_cropped_arr[i]);
+//				ImageViewList.get(i).setDisable(false); //이미지 클릭 가능
+//			}
+//		
+//		//배열(3,3) 칸만 이미지 삭제
+//		ImageViewList.get(8).setImage(null);
+//	}
 		
 	
 	
@@ -314,12 +356,12 @@ public class RootController implements Initializable{
 	
 	//그림 정답
 	public void correct(Image[] Image_arr){
-		
+		System.out.println("나 correct함수");
 		int count = 0;
-		
 		for(int i = 0; i < Image_arr.length; i++){
 			if(Image_arr[i] == ImageViewList.get(i).getImage()){
 				count++;
+				System.out.println("정답수" + count);
 			}
 			
 			if(count == 8){
@@ -335,34 +377,17 @@ public class RootController implements Initializable{
 	}
 	
 	//정답 만들기
-	public Image[] makeCorrect(){
-		
-		//이미지 배열에 자른 이미지를 차례로 입력 후 리턴하는 함수
-		Image[] correct_image = new Image[8];
-		
-		for(int i = 0; i < correct_image.length; i++){
-			correct_image[i] = (Image) cropped_arr[i];
-		}
-			
-		return correct_image;
-		
-	}
-
+//	public Image[] makeCorrect(){
+//		
+//		//이미지 배열에 자른 이미지를 차례로 입력 후 리턴하는 함수
+//		Image[] correct_image = new Image[8];
+//		
+//		for(int i = 0; i < correct_image.length; i++){
+//			correct_image[i] = (Image) cropped_arr[i];
+//		}
+//			
+//		return correct_image;
+//	}
 	
-//	//재생 이벤트 핸들러
-//	public void play(ActionEvent event){
-//		Media media = new Media(getClass().getResource("media/media.mp4").toString());
-//		MediaPlayer mediaPlayer = new MediaPlayer(media);
-//		player.setMediaPlayer(mediaPlayer);
-//		mediaPlayer.setAutoPlay(true);
-//	}
-//	
-//	
-//	//재생 메소드
-//	public void play2(){
-//		Media media = new Media(getClass().getResource("media/media.mp4").toString());
-//		MediaPlayer mediaPlayer = new MediaPlayer(media);
-//		player.setMediaPlayer(mediaPlayer);
-//		mediaPlayer.setAutoPlay(true);
-//	}
+	
 }
