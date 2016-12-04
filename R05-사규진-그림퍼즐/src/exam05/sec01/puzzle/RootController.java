@@ -46,20 +46,6 @@ public class RootController implements Initializable{
 	@FXML private Label labelTime;
 	@FXML private Slider sliderVolume;
 	
-	//이미지 불러오고 자르기
-//	Image original_image = new Image(getClass().getResource("images/main.png").toExternalForm(), 600, 600, false, true);
-//	PixelReader before_crop = original_image.getPixelReader();
-//	WritableImage cropped0 = new WritableImage(before_crop, 0, 0, 200,200);
-//	WritableImage cropped1 = new WritableImage(before_crop, 200, 0, 200,200);
-//	WritableImage cropped2 = new WritableImage(before_crop, 400, 0, 200,200);
-//	WritableImage cropped3 = new WritableImage(before_crop, 0, 200, 200,200);
-//	WritableImage cropped4 = new WritableImage(before_crop, 200, 200, 200,200);
-//	WritableImage cropped5 = new WritableImage(before_crop, 400, 200, 200,200);
-//	WritableImage cropped6 = new WritableImage(before_crop, 0, 400, 200,200);
-//	WritableImage cropped7 = new WritableImage(before_crop, 200, 400, 200,200);
-//	WritableImage cropped8 = new WritableImage(before_crop, 400, 400, 200,200);
-//	WritableImage[] cropped_arr = {cropped0,cropped1,cropped2,cropped3,cropped4,cropped5,cropped6,cropped7}; 
-//	
 	//선택된 그림 주변 4개 저장 배열
 	private int[] nb = new int[4];
 	
@@ -67,9 +53,6 @@ public class RootController implements Initializable{
 	private Image[] correct = new Image[8];
 	//배치할 이미지
 	private Image[] setImage = new Image[8]; 
-	
-	//랜덤 발생기
-	Random random = new Random();
 	
 	private boolean endOfMedia; //재생완료 확인플래그
 	
@@ -86,16 +69,15 @@ public class RootController implements Initializable{
 		btnStop.setGraphic(new ImageView(stop));
 		
 		//이미지 정답 만들기
-		
 		Image[] local_correct = new Image[8];
 		
 		
-		//정답 비교하기
+		//cutImage에서 자른 이미지를 받아와 배치할 이미지인 setImage와 정답지인 local_correct에 저장
 		for(int i = 0; i < cutImage().length; i++)
 		{
 			setImage[i] = cutImage()[i];
 			local_correct[i] = setImage[i];
-			System.out.println("난 이니셜라이즈 correct " + setImage[i]);
+//			System.out.println("난 이니셜라이즈 correct " + setImage[i]);
 		}
 		
 		//이미지뷰 클릭 이벤트
@@ -168,7 +150,7 @@ public class RootController implements Initializable{
 		
 		//이미지 삽입
 //		startBtn.setOnAction(event -> handleStartBtn(event));
-		newstart.setOnAction(new EventHandler<ActionEvent>() {
+		startBtn.setOnAction(new EventHandler<ActionEvent>() {
 
 			@Override
 			public void handle(ActionEvent event) {
@@ -177,26 +159,13 @@ public class RootController implements Initializable{
 					//잘린 이미지 섞기
 					List<Image> list = Arrays.asList(setImage);
 					Collections.shuffle(list);
-					for(Image h : list){
-						System.out.println("shuffle " + h);
-					}
-					
-					//배열로만 섞기
-//					int ran_num;
-//					for(int i = 0; i < correct.length; i++){
-//						ran_num = (int)(Math.random()*8);
-//						setImage = correct[i];
-//						correct[i] = correct[ran_num];
-//						correct[ran_num] = setImage;
-//					}
 					
 					//배열로 다시 변환
 					Image[] s_cropped_arr = list.toArray(new Image[list.size()]);
 
 					//자른 이미지를 FXML 이미지뷰id리스트에 대입 => 섞인 이미지 배치
 					for(int i = 0; i < s_cropped_arr.length; i++){
-						
-							System.out.println(s_cropped_arr[i]);
+//							System.out.println(s_cropped_arr[i]);
 							ImageViewList.get(i).setImage(s_cropped_arr[i]);
 							ImageViewList.get(i).setDisable(false); //이미지 클릭 가능
 						}
@@ -218,15 +187,12 @@ public class RootController implements Initializable{
 		//볼륨 위치 중간으로 셋팅
 		sliderVolume.setValue(50.0);
 		
-		
-		
 		//로그인 버튼 이벤트 생성
 		loginBtn.setOnAction(event->handleLoginBtn(event));
 	}
 	
 	//이미지 불러오고 자르기
 	public Image[] cutImage(){
-//		Image[] cropped_image = new Image[8];
 		Image original_image = new Image(getClass().getResource("images/main.png").toExternalForm(), 600, 600, false, true);
 		PixelReader before_crop = original_image.getPixelReader();
 		WritableImage cropped0 = new WritableImage(before_crop, 0, 0, 200,200);
@@ -237,7 +203,6 @@ public class RootController implements Initializable{
 		WritableImage cropped5 = new WritableImage(before_crop, 400, 200, 200,200);
 		WritableImage cropped6 = new WritableImage(before_crop, 0, 400, 200,200);
 		WritableImage cropped7 = new WritableImage(before_crop, 200, 400, 200,200);
-//			WritableImage cropped8 = new WritableImage(before_crop, 400, 400, 200,200); 한칸 비우기 때문에 안씀
 		WritableImage[] cropped_arr = {cropped0,cropped1,cropped2,cropped3,cropped4,cropped5,cropped6,cropped7}; 
 		for(int i = 0; i < cropped_arr.length; i++){
 			correct[i] = (Image) cropped_arr[i];
@@ -311,32 +276,6 @@ public class RootController implements Initializable{
 		}
 		
 	}
-
-	
-	//게임 시작
-//	public void handleStartBtn(ActionEvent event) {
-//		System.out.println("시작버튼 눌림");
-//		
-//		//잘린 이미지 섞기
-//		List<WritableImage> list = Arrays.asList(cropped_arr);
-//		Collections.shuffle(list);
-//		
-//		//배열로 다시 변환
-//		WritableImage[] s_cropped_arr = list.toArray(new WritableImage[list.size()]);
-//
-//		//자른 이미지를 FXML 이미지뷰id리스트에 대입 => 섞인 이미지 배치
-//		for(int i = 0; i < s_cropped_arr.length; i++){
-//			
-//			System.out.println(s_cropped_arr[i]);
-//				ImageViewList.get(i).setImage(s_cropped_arr[i]);
-//				ImageViewList.get(i).setDisable(false); //이미지 클릭 가능
-//			}
-//		
-//		//배열(3,3) 칸만 이미지 삭제
-//		ImageViewList.get(8).setImage(null);
-//	}
-		
-	
 	
 	//이웃찾기
 	public void findNeighber(int id) {
@@ -379,17 +318,12 @@ public class RootController implements Initializable{
 	
 	//그림 정답
 	public void correct(Image[] Image_arr){
-		System.out.println("나 correct함수");
-		
 		int count = 0;
 		for(int i = 0; i < Image_arr.length; i++){
-			
-			System.out.println("correct함수" + Image_arr[i]);
-			
+//			System.out.println("correct함수" + Image_arr[i]);
 			if(Image_arr[i] == ImageViewList.get(i).getImage()){
 				count++;
 			}
-			
 			if(count == 8){
 				System.out.println("정답");
 				
@@ -401,21 +335,5 @@ public class RootController implements Initializable{
 			}
 		}
 		System.out.println("정답수" + count);
-		
 	}
-	
-	//정답 만들기
-//	public Image[] makeCorrect(){
-//		
-//		//이미지 배열에 자른 이미지를 차례로 입력 후 리턴하는 함수
-//		Image[] correct_image = new Image[8];
-//		
-//		for(int i = 0; i < correct_image.length; i++){
-//			correct_image[i] = (Image) cropped_arr[i];
-//		}
-//			
-//		return correct_image;
-//	}
-	
-	
 }
