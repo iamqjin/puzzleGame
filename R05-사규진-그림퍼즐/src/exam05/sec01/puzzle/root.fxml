@@ -40,7 +40,7 @@
         <menus>
           <Menu mnemonicParsing="false" text="파일">
             <items>
-              <MenuItem fx:id="newstart" mnemonicParsing="false" text="새로 시작" />
+              <MenuItem fx:id="selectBtn" mnemonicParsing="false" text="이미지선택" />
             </items>
           </Menu>
           <Menu mnemonicParsing="false" text="도움말">

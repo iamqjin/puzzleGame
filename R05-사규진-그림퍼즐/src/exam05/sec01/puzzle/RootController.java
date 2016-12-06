@@ -39,7 +39,7 @@ import javafx.util.Duration;
 public class RootController implements Initializable{
 	@FXML private List<ImageView> ImageViewList;
 	@FXML private Button startBtn,loginBtn,cancleBtn,btnPlay, btnPause, btnStop;
-	@FXML private MenuItem newstart;
+	@FXML private MenuItem selectBtn;
 	@FXML private Label score;
 	@FXML private MediaView mediaView;
 	@FXML private ProgressBar progressBar;
@@ -153,7 +153,7 @@ public class RootController implements Initializable{
 		
 		
 		//이미지 삽입
-		newstart.setOnAction(new EventHandler<ActionEvent>() {
+		selectBtn.setOnAction(new EventHandler<ActionEvent>() {
 
 			@Override
 			public void handle(ActionEvent event) {
@@ -161,17 +161,19 @@ public class RootController implements Initializable{
 			      fileChooser.getExtensionFilters().addAll(
 			            new ExtensionFilter("Image Files", "*.png", "*.jpg", "*.gif")
 			            );
-			     File selectedFile = fileChooser.showOpenDialog(primaryStage);
-			     String imagePath = selectedFile.getPath();
-//			     System.out.println(imagePath);
-			     correctView.setImage(new Image("file:" + imagePath));
-			      if(selectedFile != null){
-			    	  System.out.println("파일선택됨");
-			      }
+			      try {
+			    	  File selectedFile = fileChooser.showOpenDialog(primaryStage);
+			    	  String imagePath = selectedFile.getPath();
+			    	  correctView.setImage(new Image("file:" + imagePath));
+			    	  if(selectedFile != null){
+			    		  System.out.println("파일선택됨");
+			    	  }
+				} catch (NullPointerException e) {
+					System.out.println("파일선택안됨");
+				}
 			}
-			
-			
 		});
+		
 		startBtn.setOnAction(new EventHandler<ActionEvent>() {
 
 			@Override
