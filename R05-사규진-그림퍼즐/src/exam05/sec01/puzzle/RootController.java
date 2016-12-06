@@ -38,7 +38,7 @@ import javafx.util.Duration;
 
 public class RootController implements Initializable{
 	@FXML private List<ImageView> ImageViewList;
-	@FXML private Button startBtn,loginBtn,cancleBtn,btnPlay, btnPause, btnStop;
+	@FXML private Button startBtn,loginBtn,btnPlay, btnPause, btnStop;
 	@FXML private MenuItem selectBtn;
 	@FXML private Label score;
 	@FXML private MediaView mediaView;
@@ -50,19 +50,18 @@ public class RootController implements Initializable{
 	//선택된 그림 주변 4개 저장 배열
 	private int[] nb = new int[4];
 	
-	//정답지
-	private Image[] correct = new Image[8];
 	//배치할 이미지
 	private Image[] setImage = new Image[8]; 
 	
 	private boolean endOfMedia; //재생완료 확인플래그
 	private Stage primaryStage;
 	
+	//선택받을 이미지
+	private Image selectedImage;
+	
 	//초기화부분(이벤트생성 등)
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
-		
-		
 		
 		//플레이어 버튼 이미지 초기화
 		Image play = new Image(getClass().getResourceAsStream("images/play-button.png"), 15 , 15 , false , true);
@@ -72,17 +71,6 @@ public class RootController implements Initializable{
 		Image stop = new Image(getClass().getResourceAsStream("images/stop-button.png"), 15 , 15 , false , false);
 		btnStop.setGraphic(new ImageView(stop));
 		
-		//이미지 정답 만들기
-		Image[] local_correct = new Image[8];
-		
-		
-		//cutImage에서 자른 이미지를 받아와 배치할 이미지인 setImage와 정답지인 local_correct에 저장
-		for(int i = 0; i < cutImage().length; i++)
-		{
-			setImage[i] = cutImage()[i];
-			local_correct[i] = setImage[i];
-//			System.out.println("난 이니셜라이즈 correct " + setImage[i]);
-		}
 		
 		//이미지뷰 클릭 이벤트
 		for(ImageView image : ImageViewList){
@@ -95,7 +83,7 @@ public class RootController implements Initializable{
 					String before_id = iv.getId();
 					int id = Integer.parseInt(before_id.substring(3));
 					findNeighber(id);
-					correct(local_correct);
+					correct();
 				}
 			});
 		}
@@ -164,7 +152,25 @@ public class RootController implements Initializable{
 			      try {
 			    	  File selectedFile = fileChooser.showOpenDialog(primaryStage);
 			    	  String imagePath = selectedFile.getPath();
-			    	  correctView.setImage(new Image("file:" + imagePath));
+			    	  Image selectImage = new Image("file:" + imagePath,600 ,600 ,false ,true);
+			    	  correctView.setImage(selectImage);
+			    	  //선택한 이미지를 전역변수 selectedImage로 대입
+			    	  selectedImage = selectImage;
+			    	  
+			    	  PixelReader before_crop = selectedImage.getPixelReader();
+			  		  WritableImage cropped0 = new WritableImage(before_crop, 0, 0, 200,200);
+			  		  WritableImage cropped1 = new WritableImage(before_crop, 200, 0, 200,200);
+			  	  	  WritableImage cropped2 = new WritableImage(before_crop, 400, 0, 200,200);
+			  	 	  WritableImage cropped3 = new WritableImage(before_crop, 0, 200, 200,200);
+			  		  WritableImage cropped4 = new WritableImage(before_crop, 200, 200, 200,200);
+			  		  WritableImage cropped5 = new WritableImage(before_crop, 400, 200, 200,200);
+			  		  WritableImage cropped6 = new WritableImage(before_crop, 0, 400, 200,200);
+			  		  WritableImage cropped7 = new WritableImage(before_crop, 200, 400, 200,200);
+			  		  WritableImage[] cropped_arr = {cropped0,cropped1,cropped2,cropped3,cropped4,cropped5,cropped6,cropped7}; 
+			  		  for(int i = 0; i < cropped_arr.length; i++){
+			  			setImage[i] = (Image) cropped_arr[i];
+			  		}
+			    	  
 			    	  if(selectedFile != null){
 			    		  System.out.println("파일선택됨");
 			    	  }
@@ -180,26 +186,37 @@ public class RootController implements Initializable{
 			public void handle(ActionEvent event) {
 					System.out.println("시작버튼 눌림");
 					
-					//미니 정답지
-//					correctView.setImage(original_image);
+					Image[] local_image = new Image[8];
 					
-					//잘린 이미지 섞기
-					List<Image> list = Arrays.asList(setImage);
-					Collections.shuffle(list);
-					
-					//배열로 다시 변환
-					Image[] s_cropped_arr = list.toArray(new Image[list.size()]);
-
-					//자른 이미지를 FXML 이미지뷰id리스트에 대입 => 섞인 이미지 배치
-					for(int i = 0; i < s_cropped_arr.length; i++){
-//							System.out.println(s_cropped_arr[i]);
-							ImageViewList.get(i).setImage(s_cropped_arr[i]);
-							ImageViewList.get(i).setDisable(false); //이미지 클릭 가능
+					if(setImage[0] == null){
+						System.out.println("선택된 이미지 없음");;
+					} else if (setImage[0] != null ){
+						System.out.println(setImage[0]);
+						System.out.println("선택된 이미지 있음");
+						for(int i = 0; i < setImage.length; i++){
+							local_image[i] = setImage[i];
 						}
+							
+							//잘린 이미지 섞기
+							List<Image> list = Arrays.asList(local_image);
+							Collections.shuffle(list);
+							
+							//배열로 다시 변환
+							Image[] s_cropped_arr = list.toArray(new Image[list.size()]);
+							
+							//자른 이미지를 FXML 이미지뷰id리스트에 대입 => 섞인 이미지 배치
+							for(int j = 0; j < s_cropped_arr.length; j++){
+//							System.out.println(s_cropped_arr[i]);
+								ImageViewList.get(j).setImage(s_cropped_arr[j]);
+								ImageViewList.get(j).setDisable(false); //이미지 클릭 가능
+							}
+							
+							//배열(3,3) 칸만 이미지 삭제
+							ImageViewList.get(8).setImage(null);
+						}
+						
+					}
 					
-					//배열(3,3) 칸만 이미지 삭제
-					ImageViewList.get(8).setImage(null);
-				}
 		});
 		
 		//음악 볼륨 액션
@@ -216,26 +233,6 @@ public class RootController implements Initializable{
 		
 		//로그인 버튼 이벤트 생성
 		loginBtn.setOnAction(event->handleLoginBtn(event));
-	}
-	
-	//이미지 불러오고 자르기
-	public Image[] cutImage(){
-		Image original_image = new Image(getClass().getResource("images/main.png").toExternalForm(), 600, 600, false, true);
-		PixelReader before_crop = original_image.getPixelReader();
-		WritableImage cropped0 = new WritableImage(before_crop, 0, 0, 200,200);
-		WritableImage cropped1 = new WritableImage(before_crop, 200, 0, 200,200);
-		WritableImage cropped2 = new WritableImage(before_crop, 400, 0, 200,200);
-		WritableImage cropped3 = new WritableImage(before_crop, 0, 200, 200,200);
-		WritableImage cropped4 = new WritableImage(before_crop, 200, 200, 200,200);
-		WritableImage cropped5 = new WritableImage(before_crop, 400, 200, 200,200);
-		WritableImage cropped6 = new WritableImage(before_crop, 0, 400, 200,200);
-		WritableImage cropped7 = new WritableImage(before_crop, 200, 400, 200,200);
-		WritableImage[] cropped_arr = {cropped0,cropped1,cropped2,cropped3,cropped4,cropped5,cropped6,cropped7}; 
-		for(int i = 0; i < cropped_arr.length; i++){
-			correct[i] = (Image) cropped_arr[i];
-		}
-			
-		return correct;
 	}
 	
 	//로그인버튼 핸들러
@@ -344,22 +341,29 @@ public class RootController implements Initializable{
 	}
 	
 	//그림 정답
-	public void correct(Image[] Image_arr){
+	public void correct(){
 		int count = 0;
-		for(int i = 0; i < Image_arr.length; i++){
+		
+		if(setImage[0] == null){
+			System.out.println("정답체크이미지 없음");
+		} else if(setImage[0] != null){
+			System.out.println("정답체크 이미지 있음");
+			for(int i = 0; i < setImage.length; i++){
 //			System.out.println("correct함수" + Image_arr[i]);
-			if(Image_arr[i] == ImageViewList.get(i).getImage()){
-				count++;
-			}
-			if(count == 8){
-				System.out.println("정답");
-				
-				for(int j = 0; j < 9; j++){
-					ImageViewList.get(j).setImage(new Image(getClass().getResource("images/main.jpg").toExternalForm()));
+				if(setImage[i] == ImageViewList.get(i).getImage()){
+					count++;
 				}
-				
-				break;
+				if(count == 8){
+					System.out.println("정답");
+					
+					for(int j = 0; j < 9; j++){
+						ImageViewList.get(j).setImage(new Image(getClass().getResource("images/main.jpg").toExternalForm()));
+					}
+					
+					break;
+				}
 			}
+			
 		}
 		System.out.println("정답수" + count);
 	}
