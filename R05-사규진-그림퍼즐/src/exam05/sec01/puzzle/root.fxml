@@ -35,7 +35,7 @@
             <ImageView fx:id="img1" fitHeight="200.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="1" />
          </children>
       </GridPane>
-      <Button fx:id="startBtn" layoutX="28.0" layoutY="168.0" mnemonicParsing="false" prefHeight="50.0" prefWidth="70.0" text="시작" />
+      <Button fx:id="startBtn" layoutX="36.0" layoutY="161.0" mnemonicParsing="false" prefHeight="50.0" prefWidth="70.0" text="시작" />
       <MenuBar prefHeight="32.0" prefWidth="800.0">
         <menus>
           <Menu mnemonicParsing="false" text="파일">
@@ -50,15 +50,16 @@
           </Menu>
         </menus>
       </MenuBar>
-      <Button fx:id="loginBtn" layoutX="37.0" layoutY="334.0" mnemonicParsing="false" text="로그인" />
+      <Button fx:id="loginBtn" layoutX="39.0" layoutY="254.0" mnemonicParsing="false" text="로그인" />
       <Button fx:id="cancleBtn" layoutX="31.0" layoutY="718.0" mnemonicParsing="false" text="게임종료" />
       <Button fx:id="btnPlay" layoutX="547.0" layoutY="73.0" mnemonicParsing="false" prefHeight="40.0" prefWidth="40.0" />
       <Button fx:id="btnPause" layoutX="613.0" layoutY="73.0" mnemonicParsing="false" prefHeight="40.0" prefWidth="40.0" />
       <Button fx:id="btnStop" layoutX="486.0" layoutY="73.0" mnemonicParsing="false" prefHeight="40.0" prefWidth="40.0" />
-      <MediaView fx:id="mediaView" fitHeight="100.0" fitWidth="100.0" layoutX="300.0" layoutY="43.0" />
+      <MediaView fx:id="mediaView" fitHeight="100.0" fitWidth="100.0" layoutX="339.0" layoutY="43.0" />
       <ProgressBar fx:id="progressBar" layoutX="476.0" layoutY="45.0" prefWidth="200.0" progress="0.0" />
-      <Label fx:id="labelTime" layoutX="686.0" layoutY="47.0" text="Label" />
+      <Label fx:id="labelTime" layoutX="686.0" layoutY="47.0" />
       <Slider fx:id="sliderVolume" layoutX="506.0" layoutY="121.0" />
+      <ImageView fx:id="correctView" fitHeight="111.0" fitWidth="118.0" layoutX="20.0" layoutY="546.0" pickOnBounds="true" preserveRatio="true" />
    </children>
 	
     <fx:define>
@@ -73,6 +74,6 @@
    			<fx:reference source= "img7"/>
    			<fx:reference source= "img8"/>
    		</ArrayList>
-   </fx:define>   
+   </fx:define>
 	  
 </AnchorPane>

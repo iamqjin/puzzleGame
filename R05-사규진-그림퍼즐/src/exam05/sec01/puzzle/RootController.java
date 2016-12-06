@@ -1,12 +1,11 @@
 package exam05.sec01.puzzle;
 
+import java.io.File;
 import java.io.IOException;
 import java.net.URL;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
-import java.util.Random;
 import java.util.ResourceBundle;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
@@ -16,7 +15,6 @@ import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
-import javafx.print.PaperSource;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
@@ -31,6 +29,8 @@ import javafx.scene.image.WritableImage;
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
 import javafx.scene.media.MediaView;
+import javafx.stage.FileChooser;
+import javafx.stage.FileChooser.ExtensionFilter;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
@@ -45,6 +45,7 @@ public class RootController implements Initializable{
 	@FXML private ProgressBar progressBar;
 	@FXML private Label labelTime;
 	@FXML private Slider sliderVolume;
+	@FXML private ImageView correctView;
 	
 	//선택된 그림 주변 4개 저장 배열
 	private int[] nb = new int[4];
@@ -55,10 +56,13 @@ public class RootController implements Initializable{
 	private Image[] setImage = new Image[8]; 
 	
 	private boolean endOfMedia; //재생완료 확인플래그
+	private Stage primaryStage;
 	
 	//초기화부분(이벤트생성 등)
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
+		
+		
 		
 		//플레이어 버튼 이미지 초기화
 		Image play = new Image(getClass().getResourceAsStream("images/play-button.png"), 15 , 15 , false , true);
@@ -149,12 +153,33 @@ public class RootController implements Initializable{
 		
 		
 		//이미지 삽입
-//		startBtn.setOnAction(event -> handleStartBtn(event));
+		newstart.setOnAction(new EventHandler<ActionEvent>() {
+
+			@Override
+			public void handle(ActionEvent event) {
+				FileChooser fileChooser = new FileChooser();
+			      fileChooser.getExtensionFilters().addAll(
+			            new ExtensionFilter("Image Files", "*.png", "*.jpg", "*.gif")
+			            );
+			     File selectedFile = fileChooser.showOpenDialog(primaryStage);
+			     String imagePath = selectedFile.getPath();
+//			     System.out.println(imagePath);
+			     correctView.setImage(new Image("file:" + imagePath));
+			      if(selectedFile != null){
+			    	  System.out.println("파일선택됨");
+			      }
+			}
+			
+			
+		});
 		startBtn.setOnAction(new EventHandler<ActionEvent>() {
 
 			@Override
 			public void handle(ActionEvent event) {
 					System.out.println("시작버튼 눌림");
+					
+					//미니 정답지
+//					correctView.setImage(original_image);
 					
 					//잘린 이미지 섞기
 					List<Image> list = Arrays.asList(setImage);
