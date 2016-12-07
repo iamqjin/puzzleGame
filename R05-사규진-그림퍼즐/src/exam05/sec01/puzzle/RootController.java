@@ -26,6 +26,7 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.image.PixelReader;
 import javafx.scene.image.WritableImage;
+import javafx.scene.media.AudioClip;
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
 import javafx.scene.media.MediaView;
@@ -40,10 +41,10 @@ public class RootController implements Initializable{
 	@FXML private List<ImageView> ImageViewList;
 	@FXML private Button startBtn,btnPlay, btnPause, btnStop;
 	@FXML private MenuItem selectBtn;
-	@FXML private Label score;
-	@FXML private MediaView mediaView;
+	@FXML private Label score, stateLabel;
+	@FXML private MediaView mediaView, effectView;
 	@FXML private ProgressBar progressBar;
-	@FXML private Label labelTime;
+	@FXML private Label labelTime,clickLabel;
 	@FXML private Slider sliderVolume;
 	@FXML private ImageView correctView;
 	
@@ -59,9 +60,15 @@ public class RootController implements Initializable{
 	//선택받을 이미지
 	private Image selectedImage;
 	
+	//클릭횟수
+	private int click;
+	
 	//초기화부분(이벤트생성 등)
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
+		
+		//로그인상태표시
+		stateLabel.setText("admin 님이 접속");
 		
 		//플레이어 버튼 이미지 초기화
 		Image play = new Image(getClass().getResourceAsStream("images/play-button.png"), 15 , 15 , false , true);
@@ -71,13 +78,24 @@ public class RootController implements Initializable{
 		Image stop = new Image(getClass().getResourceAsStream("images/stop-button.png"), 15 , 15 , false , false);
 		btnStop.setGraphic(new ImageView(stop));
 		
-		
 		//이미지뷰 클릭 이벤트
 		for(ImageView image : ImageViewList){
 			image.setOnMouseClicked(new EventHandler<Event>() {
-
 				@Override
 				public void handle(Event event) {
+					
+					
+					//효과음 객체 생성
+					Media mediaEffect = new Media(getClass().getResource("media/switch2.mp3").toString());
+					MediaPlayer effectPlayer = new MediaPlayer(mediaEffect);
+					if(setImage[0] == null){
+						System.out.println("재생 ㄴㄴ");
+					} else {
+						//현재 클릭한 횟수
+						++click;
+						clickLabel.setText("현재 클릭한 횟수 \n" + click);
+						effectPlayer.play();
+					}
 					//이미지뷰의 id 값을 얻은 뒤 숫자만 잘라서 int형으로 변환
 					ImageView iv = (ImageView) event.getSource();
 					String before_id = iv.getId();
@@ -91,7 +109,6 @@ public class RootController implements Initializable{
 		//음악재생 객체 생성
 		Media media = new Media(getClass().getResource("media/audio.mp3").toString());
 		MediaPlayer mediaPlayer = new MediaPlayer(media);
-		mediaView.setMediaPlayer(mediaPlayer);
 		
 		mediaPlayer.setOnReady(new Runnable() {
 			
@@ -108,7 +125,7 @@ public class RootController implements Initializable{
 				});
 				btnPlay.setDisable(false); btnPause.setDisable(true); btnStop.setDisable(true);
 				if(mediaPlayer.isAutoPlay()){
-					mediaView.setVisible(false);
+//					mediaView.setVisible(false);
 				}
 			}
 		});
@@ -129,6 +146,11 @@ public class RootController implements Initializable{
 		
 		//재생 액션 처리
 		btnPlay.setOnAction(event -> {
+			//효과음 객체 생성
+			Media mediaEffect = new Media(getClass().getResource("media/switch3.mp3").toString());
+			MediaPlayer effectPlayer = new MediaPlayer(mediaEffect);
+			effectPlayer.play();
+			
 			if(endOfMedia){
 				mediaPlayer.stop();
 				mediaPlayer.seek(mediaPlayer.getStartTime());
@@ -136,15 +158,28 @@ public class RootController implements Initializable{
 			mediaPlayer.play();
 			endOfMedia = false;
 		});
-		btnPause.setOnAction(event -> mediaPlayer.pause());
-		btnStop.setOnAction(event-> mediaPlayer.stop());
+		btnPause.setOnAction(event -> {
+			//효과음 객체 생성
+			Media mediaEffect = new Media(getClass().getResource("media/switch3.mp3").toString());
+			MediaPlayer effectPlayer = new MediaPlayer(mediaEffect);
+			effectPlayer.play();
+			mediaPlayer.pause();
+		});
+		btnStop.setOnAction(event-> {
+			//효과음 객체 생성
+			Media mediaEffect = new Media(getClass().getResource("media/switch3.mp3").toString());
+			MediaPlayer effectPlayer = new MediaPlayer(mediaEffect);
+			effectPlayer.play();
+			mediaPlayer.stop();
+			});
 		
 		
 		//이미지 삽입
 		selectBtn.setOnAction(new EventHandler<ActionEvent>() {
-
+			
 			@Override
 			public void handle(ActionEvent event) {
+				
 				FileChooser fileChooser = new FileChooser();
 			      fileChooser.getExtensionFilters().addAll(
 			            new ExtensionFilter("Image Files", "*.png", "*.jpg", "*.gif")
@@ -173,9 +208,11 @@ public class RootController implements Initializable{
 			    	  
 			    	  if(selectedFile != null){
 			    		  System.out.println("파일선택됨");
+			    		  stateLabel.setText("이미지가 선택되었습니다.");
 			    	  }
 				} catch (NullPointerException e) {
 					System.out.println("파일선택안됨");
+					stateLabel.setText("이미지를 선택해주세요");
 				}
 			}
 		});
@@ -185,12 +222,21 @@ public class RootController implements Initializable{
 			@Override
 			public void handle(ActionEvent event) {
 					System.out.println("시작버튼 눌림");
+					//시작과 동시에 클릭한 수 초기화
+					click = 0;
+					clickLabel.setText("현재 클릭한 횟수 \n" +click);
+					//효과음 객체 생성
+					Media mediaEffect = new Media(getClass().getResource("media/switch3.mp3").toString());
+					MediaPlayer effectPlayer = new MediaPlayer(mediaEffect);
+					effectPlayer.play();
 					
 					Image[] local_image = new Image[8];
 					
 					if(setImage[0] == null){
 						System.out.println("선택된 이미지 없음");;
+						stateLabel.setText("이미지를 선택해주세요.");
 					} else if (setImage[0] != null ){
+						stateLabel.setText("시작되었습니다.");
 						System.out.println(setImage[0]);
 						System.out.println("선택된 이미지 있음");
 						for(int i = 0; i < setImage.length; i++){
@@ -231,75 +277,7 @@ public class RootController implements Initializable{
 		//볼륨 위치 중간으로 셋팅
 		sliderVolume.setValue(50.0);
 		
-		//로그인 버튼 이벤트 생성
-//		loginBtn.setOnAction(event->handleLoginBtn(event));
 	}
-	
-	//로그인버튼 핸들러
-//	private void handleLoginBtn(ActionEvent event){
-//		try {
-//			Stage dialog = new Stage(StageStyle.UTILITY);
-//			dialog.initModality(Modality.WINDOW_MODAL);
-//			dialog.initOwner(loginBtn.getScene().getWindow());
-//			dialog.setTitle("추가");
-//			
-//			Parent parent = FXMLLoader.load(getClass().getResource("login.fxml"));
-//			
-//			//로그인창에서 취소버튼시 되돌아옴
-//			Button loginFormCancle = (Button) parent.lookup("#cancleBtn");
-//			loginFormCancle.setOnAction(e->dialog.close());
-//			
-//			//로그인창에서 회원가입 버튼 입력시 작동
-//			Button joinBtn_login = (Button) parent.lookup("#signUpBtn");
-//			joinBtn_login.setOnAction(e -> {
-//				
-//				Stage dialog_join = new Stage(StageStyle.UTILITY);
-//				dialog_join.initModality(Modality.WINDOW_MODAL);
-//				dialog_join.initOwner(loginBtn.getScene().getWindow());
-//				dialog_join.setTitle("회원가입");
-//				
-//				try {
-//					Parent parent_join = FXMLLoader.load(getClass().getResource("join.fxml"));
-//					Button joinFormCancle = (Button) parent_join.lookup("#cancleBtn");
-//					Button joinBtn_join = (Button) parent_join.lookup("#joinBtn");
-//					
-//					//회원가입창 가입버튼이벤트 + 취소버튼 이벤트
-//					joinBtn_join.setOnAction(new EventHandler<ActionEvent>() {
-//
-//						@Override
-//						public void handle(ActionEvent event) {
-//							System.out.println("난 가입버튼");
-//							dialog_join.close();
-//						}
-//						
-//					});
-//					joinFormCancle.setOnAction(new EventHandler<ActionEvent>() {
-//
-//						@Override
-//						public void handle(ActionEvent event) {
-//							System.out.println("난 취소버튼");
-//							dialog_join.close();
-//						}
-//					});
-//					
-//					//회원가입창 scene 생성 후 띄움
-//					Scene scene = new Scene(parent_join);
-//					dialog_join.setScene(scene);
-//					dialog_join.show();
-//				} catch (IOException e1) {
-//					e1.printStackTrace();
-//				}
-//				
-//			});
-//			
-//			Scene scene = new Scene(parent);
-//			dialog.setScene(scene);
-//			dialog.show();
-//		} catch (Exception e) {
-//			e.printStackTrace();
-//		}
-//		
-//	}
 	
 	//이웃찾기
 	public void findNeighber(int id) {
@@ -354,10 +332,10 @@ public class RootController implements Initializable{
 					count++;
 				}
 				if(count == 8){
-					System.out.println("정답");
+					stateLabel.setText("정답입니다.");
 					
 					for(int j = 0; j < 9; j++){
-						ImageViewList.get(j).setImage(new Image(getClass().getResource("images/main.jpg").toExternalForm()));
+						ImageViewList.get(j).setImage(new Image(getClass().getResource("images/correct.jpg").toExternalForm()));
 					}
 					
 					break;
@@ -365,6 +343,8 @@ public class RootController implements Initializable{
 			}
 			
 		}
-		System.out.println("정답수" + count);
+		if(setImage[0] != null){
+			stateLabel.setText("현재 맞은 그림 수 \n " + count);
+		}
 	}
 }

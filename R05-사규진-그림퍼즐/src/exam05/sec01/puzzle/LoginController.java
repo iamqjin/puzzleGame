@@ -12,15 +12,17 @@ import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
-import javafx.scene.layout.StackPane;
+import javafx.scene.media.Media;
+import javafx.scene.media.MediaPlayer;
+import javafx.scene.media.MediaView;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
-import javafx.util.Duration;
 
 public class LoginController implements Initializable{
 	@FXML private Button loginBtn, cancleBtn;
 	@FXML private TextField idField, pwdField;
 	@FXML private Label errorLabel;
+	@FXML private MediaView effectView;
 	
 	
 	@Override
@@ -34,8 +36,12 @@ public class LoginController implements Initializable{
 
 	//로그인 버튼 핸들러
 	public void handLoginBtn(ActionEvent event) {
-
+			
 			System.out.println("나 눌림");
+			
+			//효과음 객체 생성
+			Media mediaEffect = new Media(getClass().getResource("media/switch3.mp3").toString());
+			MediaPlayer effectPlayer = new MediaPlayer(mediaEffect);
 			
 			String idValue = new String();
 			String pwdValue = new String();
@@ -52,6 +58,7 @@ public class LoginController implements Initializable{
 			if(idValue.length() == 0 && pwdValue.length() == 0){
 				errorLabel.setText("아이디나 비밀번호를 입력하세요");
 				errorLabel.setTextFill(Color.rgb(255, 0, 0));
+				effectPlayer.play();
 			} else if(idValue.equals(idPwd) && pwdValue.equals(idPwd)){
 				errorLabel.setTextFill(Color.rgb(21, 117 , 84));
 				errorLabel.setText("인증 되었습니다..");
@@ -66,11 +73,18 @@ public class LoginController implements Initializable{
 					idField.clear();
 					pwdField.clear();
 					errorLabel.setText("");
+					//효과음 객체 생성
+					Media mediaEffect1 = new Media(getClass().getResource("media/Windows.mp3").toString());
+					MediaPlayer effectPlayer1 = new MediaPlayer(mediaEffect1);
+					effectPlayer1.play();
 					Button gameViewCloseBtn = (Button) root.lookup("#cancleBtn");
 					gameViewCloseBtn.setOnAction(e -> {
 						primaryStage.close();
 					});
-					primaryStage.setOnCloseRequest(e -> System.out.println("게임 종료"));
+					primaryStage.setOnCloseRequest(e -> {
+						primaryStage.close();
+						System.out.println("게임 종료");
+					});
 					primaryStage.show();
 				} catch (IOException e2) {
 					e2.printStackTrace();
@@ -78,6 +92,7 @@ public class LoginController implements Initializable{
 			} else {
 				errorLabel.setTextFill(Color.rgb(255, 0, 0));
 				errorLabel.setText("존재하지 않는 아이디입니다.");
+				effectPlayer.play();
 			}
 	}
 	

@@ -20,13 +20,13 @@ public class AppMain extends Application{
 	public void start(Stage primaryStage) throws Exception {
 		Parent root = FXMLLoader.load(getClass().getResource("login.fxml"));
 		Scene scene = new Scene(root);
-		
 		primaryStage.setTitle("로그인");
 		primaryStage.setScene(scene);
 		Button loginCancleButton = (Button) root.lookup("#cancleBtn");
 		loginCancleButton.setOnAction(e -> {
 			primaryStage.close();
 		});
+		
 		primaryStage.setOnCloseRequest(event -> System.out.println("게임 종료"));
 		primaryStage.show();
 	}
