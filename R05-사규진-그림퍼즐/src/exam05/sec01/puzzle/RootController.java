@@ -38,7 +38,7 @@ import javafx.util.Duration;
 
 public class RootController implements Initializable{
 	@FXML private List<ImageView> ImageViewList;
-	@FXML private Button startBtn,loginBtn,btnPlay, btnPause, btnStop;
+	@FXML private Button startBtn,btnPlay, btnPause, btnStop;
 	@FXML private MenuItem selectBtn;
 	@FXML private Label score;
 	@FXML private MediaView mediaView;
@@ -232,74 +232,74 @@ public class RootController implements Initializable{
 		sliderVolume.setValue(50.0);
 		
 		//로그인 버튼 이벤트 생성
-		loginBtn.setOnAction(event->handleLoginBtn(event));
+//		loginBtn.setOnAction(event->handleLoginBtn(event));
 	}
 	
 	//로그인버튼 핸들러
-	private void handleLoginBtn(ActionEvent event){
-		try {
-			Stage dialog = new Stage(StageStyle.UTILITY);
-			dialog.initModality(Modality.WINDOW_MODAL);
-			dialog.initOwner(loginBtn.getScene().getWindow());
-			dialog.setTitle("추가");
-			
-			Parent parent = FXMLLoader.load(getClass().getResource("login.fxml"));
-			
-			//로그인창에서 취소버튼시 되돌아옴
-			Button loginFormCancle = (Button) parent.lookup("#cancleBtn");
-			loginFormCancle.setOnAction(e->dialog.close());
-			
-			//로그인창에서 회원가입 버튼 입력시 작동
-			Button joinBtn_login = (Button) parent.lookup("#signUpBtn");
-			joinBtn_login.setOnAction(e -> {
-				
-				Stage dialog_join = new Stage(StageStyle.UTILITY);
-				dialog_join.initModality(Modality.WINDOW_MODAL);
-				dialog_join.initOwner(loginBtn.getScene().getWindow());
-				dialog_join.setTitle("회원가입");
-				
-				try {
-					Parent parent_join = FXMLLoader.load(getClass().getResource("join.fxml"));
-					Button joinFormCancle = (Button) parent_join.lookup("#cancleBtn");
-					Button joinBtn_join = (Button) parent_join.lookup("#joinBtn");
-					
-					//회원가입창 가입버튼이벤트 + 취소버튼 이벤트
-					joinBtn_join.setOnAction(new EventHandler<ActionEvent>() {
-
-						@Override
-						public void handle(ActionEvent event) {
-							System.out.println("난 가입버튼");
-							dialog_join.close();
-						}
-						
-					});
-					joinFormCancle.setOnAction(new EventHandler<ActionEvent>() {
-
-						@Override
-						public void handle(ActionEvent event) {
-							System.out.println("난 취소버튼");
-							dialog_join.close();
-						}
-					});
-					
-					//회원가입창 scene 생성 후 띄움
-					Scene scene = new Scene(parent_join);
-					dialog_join.setScene(scene);
-					dialog_join.show();
-				} catch (IOException e1) {
-					e1.printStackTrace();
-				}
-				
-			});
-			
-			Scene scene = new Scene(parent);
-			dialog.setScene(scene);
-			dialog.show();
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		
-	}
+//	private void handleLoginBtn(ActionEvent event){
+//		try {
+//			Stage dialog = new Stage(StageStyle.UTILITY);
+//			dialog.initModality(Modality.WINDOW_MODAL);
+//			dialog.initOwner(loginBtn.getScene().getWindow());
+//			dialog.setTitle("추가");
+//			
+//			Parent parent = FXMLLoader.load(getClass().getResource("login.fxml"));
+//			
+//			//로그인창에서 취소버튼시 되돌아옴
+//			Button loginFormCancle = (Button) parent.lookup("#cancleBtn");
+//			loginFormCancle.setOnAction(e->dialog.close());
+//			
+//			//로그인창에서 회원가입 버튼 입력시 작동
+//			Button joinBtn_login = (Button) parent.lookup("#signUpBtn");
+//			joinBtn_login.setOnAction(e -> {
+//				
+//				Stage dialog_join = new Stage(StageStyle.UTILITY);
+//				dialog_join.initModality(Modality.WINDOW_MODAL);
+//				dialog_join.initOwner(loginBtn.getScene().getWindow());
+//				dialog_join.setTitle("회원가입");
+//				
+//				try {
+//					Parent parent_join = FXMLLoader.load(getClass().getResource("join.fxml"));
+//					Button joinFormCancle = (Button) parent_join.lookup("#cancleBtn");
+//					Button joinBtn_join = (Button) parent_join.lookup("#joinBtn");
+//					
+//					//회원가입창 가입버튼이벤트 + 취소버튼 이벤트
+//					joinBtn_join.setOnAction(new EventHandler<ActionEvent>() {
+//
+//						@Override
+//						public void handle(ActionEvent event) {
+//							System.out.println("난 가입버튼");
+//							dialog_join.close();
+//						}
+//						
+//					});
+//					joinFormCancle.setOnAction(new EventHandler<ActionEvent>() {
+//
+//						@Override
+//						public void handle(ActionEvent event) {
+//							System.out.println("난 취소버튼");
+//							dialog_join.close();
+//						}
+//					});
+//					
+//					//회원가입창 scene 생성 후 띄움
+//					Scene scene = new Scene(parent_join);
+//					dialog_join.setScene(scene);
+//					dialog_join.show();
+//				} catch (IOException e1) {
+//					e1.printStackTrace();
+//				}
+//				
+//			});
+//			
+//			Scene scene = new Scene(parent);
+//			dialog.setScene(scene);
+//			dialog.show();
+//		} catch (Exception e) {
+//			e.printStackTrace();
+//		}
+//		
+//	}
 	
 	//이웃찾기
 	public void findNeighber(int id) {
