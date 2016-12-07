@@ -224,7 +224,6 @@ public class RootController implements Initializable{
 					System.out.println("시작버튼 눌림");
 					//시작과 동시에 클릭한 수 초기화
 					click = 0;
-					clickLabel.setText("현재 클릭한 횟수 \n" +click);
 					//효과음 객체 생성
 					Media mediaEffect = new Media(getClass().getResource("media/switch3.mp3").toString());
 					MediaPlayer effectPlayer = new MediaPlayer(mediaEffect);
@@ -238,6 +237,7 @@ public class RootController implements Initializable{
 					} else if (setImage[0] != null ){
 						stateLabel.setText("시작되었습니다.");
 						System.out.println(setImage[0]);
+						clickLabel.setText("현재 클릭한 횟수 \n" +click);
 						System.out.println("선택된 이미지 있음");
 						for(int i = 0; i < setImage.length; i++){
 							local_image[i] = setImage[i];
