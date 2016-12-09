@@ -3,6 +3,7 @@ package exam05.sec01.puzzle;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
+import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -29,7 +30,6 @@ public class LoginController implements Initializable{
 	public void initialize(URL location, ResourceBundle resources) {
 		//로그인 버튼
 		loginBtn.setOnAction(e->handLoginBtn(e));
-		cancleBtn.setOnAction(e -> cancleBtn(e));
 		idField.setPromptText("ID를 입력하세요");
 		pwdField.setPromptText("PASSWORD를 입력하세요");
 	}
@@ -56,7 +56,7 @@ public class LoginController implements Initializable{
 			}
 			
 			if(idValue.length() == 0 && pwdValue.length() == 0){
-				errorLabel.setText("아이디나 비밀번호를 입력하세요");
+				errorLabel.setText("아이디와 비밀번호를 입력하세요");
 				errorLabel.setTextFill(Color.rgb(255, 0, 0));
 				effectPlayer.play();
 			} else if(idValue.equals(idPwd) && pwdValue.equals(idPwd)){
@@ -79,9 +79,11 @@ public class LoginController implements Initializable{
 					effectPlayer1.play();
 					Button gameViewCloseBtn = (Button) root.lookup("#cancleBtn");
 					gameViewCloseBtn.setOnAction(e -> {
+						Platform.exit();
 						primaryStage.close();
 					});
 					primaryStage.setOnCloseRequest(e -> {
+						Platform.exit();
 						primaryStage.close();
 						System.out.println("게임 종료");
 					});
@@ -89,15 +91,19 @@ public class LoginController implements Initializable{
 				} catch (IOException e2) {
 					e2.printStackTrace();
 				}
+			} else if (idValue.equals(idPwd) && !pwdValue.equals(idPwd)) {
+				errorLabel.setTextFill(Color.rgb(255, 0, 0));
+				errorLabel.setText("비밀번호를 다시입력해주세요.");
+				effectPlayer.play();
+			} else if(!idValue.equals(idPwd) && !(pwdValue.length() == 0)){
+				errorLabel.setTextFill(Color.rgb(255, 0, 0));
+				errorLabel.setText("존재하지 않는 회원정보입니다.");
+				effectPlayer.play();
 			} else {
 				errorLabel.setTextFill(Color.rgb(255, 0, 0));
-				errorLabel.setText("존재하지 않는 아이디입니다.");
+				errorLabel.setText("비밀번호를 입력하세요");
 				effectPlayer.play();
 			}
 	}
 	
-	//취소 버튼 핸들러
-	public void  cancleBtn(ActionEvent event) {
-		
-	}
 }

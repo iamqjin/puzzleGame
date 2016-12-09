@@ -53,12 +53,12 @@
           </Menu>
         </menus>
       </MenuBar>
-      <Button fx:id="btnPlay" layoutX="688.0" layoutY="79.0" mnemonicParsing="false" prefHeight="40.0" prefWidth="40.0" />
-      <Button fx:id="btnPause" layoutX="768.0" layoutY="79.0" mnemonicParsing="false" prefHeight="40.0" prefWidth="40.0" />
-      <Button fx:id="btnStop" layoutX="608.0" layoutY="79.0" mnemonicParsing="false" prefHeight="40.0" prefWidth="40.0" />
-      <ProgressBar fx:id="progressBar" layoutX="608.0" layoutY="45.0" prefWidth="200.0" progress="0.0" />
-      <Label fx:id="labelTime" layoutX="811.0" layoutY="45.0" prefHeight="23.0" prefWidth="87.0" />
-      <Slider fx:id="sliderVolume" layoutX="613.0" layoutY="140.0" prefHeight="18.0" prefWidth="200.0" />
+      <Button fx:id="btnPlay" layoutX="649.0" layoutY="79.0" mnemonicParsing="false" prefHeight="40.0" prefWidth="40.0" />
+      <Button fx:id="btnPause" layoutX="729.0" layoutY="79.0" mnemonicParsing="false" prefHeight="40.0" prefWidth="40.0" />
+      <Button fx:id="btnStop" layoutX="569.0" layoutY="79.0" mnemonicParsing="false" prefHeight="40.0" prefWidth="40.0" />
+      <ProgressBar fx:id="progressBar" layoutX="569.0" layoutY="45.0" prefWidth="200.0" progress="0.0" />
+      <Label fx:id="labelTime" layoutX="774.0" layoutY="45.0" prefHeight="23.0" prefWidth="122.0" />
+      <Slider fx:id="sliderVolume" layoutX="574.0" layoutY="140.0" prefHeight="18.0" prefWidth="200.0" />
       <Rectangle arcHeight="5.0" arcWidth="5.0" fill="WHITE" height="175.0" layoutX="39.0" layoutY="488.0" stroke="BLACK" strokeType="INSIDE" width="175.0" />
       <ImageView fx:id="correctView" fitHeight="175.0" fitWidth="175.0" layoutX="39.0" layoutY="488.0" pickOnBounds="true" preserveRatio="true" />
       <Button fx:id="cancleBtn" layoutX="73.0" layoutY="705.0" mnemonicParsing="false" prefHeight="50.0" prefWidth="100.0" text="게임종료" />
@@ -68,7 +68,7 @@
       <Label fx:id="clickLabel" alignment="CENTER" layoutX="39.0" layoutY="391.0" prefHeight="57.0" prefWidth="175.0" textAlignment="CENTER" />
    </children>
 	
- 	  <fx:define>
+ 	 <fx:define>
    		<ArrayList fx:id="ImageViewList">
    			<fx:reference source= "img0"/>
    			<fx:reference source= "img1"/>
@@ -80,6 +80,6 @@
    			<fx:reference source= "img7"/>
    			<fx:reference source= "img8"/>
    		</ArrayList>
-   </fx:define> 
+   </fx:define>  
 	  
 </AnchorPane>
